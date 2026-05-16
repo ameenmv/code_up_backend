@@ -3,12 +3,11 @@ from models import db, User, Category, Course, Lesson, Quiz, Question, Choice
 
 app = create_app()
 
-def seed():
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
+def seed_logic():
+    db.drop_all()
+    db.create_all()
 
-        # ── Categories ──────────────────────────────────────────────
+    # ── Categories ──────────────────────────────────────────────
         categories = [
             Category(name_en='Web Development', name_ar='برمجة الويب', slug='web', icon='🌐',
                      description_en='Build websites and web apps', description_ar='تعلم بناء مواقع وتطبيقات الويب'),
@@ -230,6 +229,10 @@ def seed():
         print(f"📚 Courses: {Course.query.count()}")
         print(f"📖 Lessons: {Lesson.query.count()}")
         print(f"👤 Admin: admin@platform.com / admin123")
+
+def seed():
+    with app.app_context():
+        seed_logic()
 
 if __name__ == '__main__':
     seed()

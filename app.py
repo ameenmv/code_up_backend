@@ -83,5 +83,18 @@ def create_app(config_class=Config):
 
 app = create_app()
 
+@app.route('/api/seed-database', methods=['GET'])
+def seed_database():
+    try:
+        from seed_data import seed_logic
+        with app.app_context():
+            seed_logic()
+        return jsonify({
+            "message": "Database seeded successfully! You can now login as admin@platform.com with password admin123"
+        }), 200
+    except Exception as e:
+        import traceback
+        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
