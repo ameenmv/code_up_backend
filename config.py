@@ -33,7 +33,17 @@ class Config:
         elif database_url.startswith("postgresql://"):
             database_url = database_url.replace("postgresql://", "postgresql+pg8000://", 1)
         
+    import ssl
     SQLALCHEMY_DATABASE_URI = database_url or db_uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Configure SSL for pg8000
+    if database_url and "pg8000" in database_url:
+        SQLALCHEMY_ENGINE_OPTIONS = {
+            'connect_args': {
+                'ssl_context': True
+            }
+        }
+        
     PERMANENT_SESSION_LIFETIME = timedelta(days=7)
     WTF_CSRF_ENABLED = False
