@@ -64,7 +64,7 @@ def completion_time():
         Course.title_ar,
         func.count(Certificate.id).label('completions'),
         func.avg(
-            func.julianday(Certificate.issued_at) - func.julianday(Enrollment.enrolled_at)
+            func.extract('epoch', Certificate.issued_at - Enrollment.enrolled_at) / 86400.0
         ).label('avg_days')
     ).join(Enrollment, Enrollment.course_id == Course.id) \
      .join(Certificate, db.and_(
@@ -73,7 +73,7 @@ def completion_time():
      )) \
      .group_by(Course.id) \
      .order_by(func.avg(
-         func.julianday(Certificate.issued_at) - func.julianday(Enrollment.enrolled_at)
+         func.extract('epoch', Certificate.issued_at - Enrollment.enrolled_at) / 86400.0
      ).asc()) \
      .all()
 
