@@ -24,7 +24,10 @@ class Config:
     # Handle Database URL for pg8000 (Serverless compatible)
     database_url = os.environ.get('DATABASE_URL')
     if database_url:
-        # Neon sometimes adds query parameters like ?sslmode=require which pg8000 handles
+        # Strip query params like ?sslmode=require because pg8000 does not accept them
+        if '?' in database_url:
+            database_url = database_url.split('?')[0]
+            
         if database_url.startswith("postgres://"):
             database_url = database_url.replace("postgres://", "postgresql+pg8000://", 1)
         elif database_url.startswith("postgresql://"):
