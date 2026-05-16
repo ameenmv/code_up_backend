@@ -54,7 +54,10 @@ def create_app(config_class=Config):
     app.register_blueprint(analytics_bp)
 
     with app.app_context():
-        db.create_all()
+        try:
+            db.create_all()
+        except Exception as e:
+            print(f"Database connection error: {e}")
 
     return app
 

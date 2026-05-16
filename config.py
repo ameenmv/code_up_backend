@@ -21,10 +21,14 @@ else:
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
     
-    # Handle Database URL (Fix for SQLAlchemy requiring postgresql:// instead of postgres://)
+    # Handle Database URL for pg8000 (Serverless compatible)
     database_url = os.environ.get('DATABASE_URL')
-    if database_url and database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://", 1)
+    if database_url:
+        # Neon sometimes adds query parameters like ?sslmode=require which pg8000 handles
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql+pg8000://", 1)
+        elif database_url.startswith("postgresql://"):
+            database_url = database_url.replace("postgresql://", "postgresql+pg8000://", 1)
         
     SQLALCHEMY_DATABASE_URI = database_url or db_uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
