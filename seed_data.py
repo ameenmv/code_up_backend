@@ -7,7 +7,8 @@ def seed_logic():
     db.drop_all()
     db.create_all()
 
-    # ── Categories ──────────────────────────────────────────────
+    if True:
+        # ── Categories ──────────────────────────────────────────────
         categories = [
             Category(name_en='Web Development', name_ar='برمجة الويب', slug='web', icon='🌐',
                      description_en='Build websites and web apps', description_ar='تعلم بناء مواقع وتطبيقات الويب'),
